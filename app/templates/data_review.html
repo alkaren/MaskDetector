@@ -1,0 +1,78 @@
+{% extends "template.html" %}
+{% block content %}
+<div class="container pt-4">
+    <div class="container-fluid">
+        <div id="frame_container" class="row">
+            <div class="col-12">
+                <center>
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                </center>
+            </div>
+        </div>
+        <!-- <div class="row mt-3 mb-5">
+            <div class="col-6 d-flex justify-content-end">
+                <button id="start" onclick="start()" class="btn btn-outline-success"><i class="fa fa-video-camera"
+                                                                                        aria-hidden="true"></i> Start
+                </button>
+            </div>
+            <div class="col-6 d-flex justify-content-start">
+                <button id="stop" onclick="stop()" class="btn btn-danger active"><i class="fa fa-stop"
+                                                                                    aria-hidden="true"></i> Stop
+                </button>
+            </div>
+        </div> -->
+        <hr>
+        <div class="row mb-3">
+            <p class="d-flex mx-auto lead" style="color: #031b19;"><strong>please, stay safe and wear a mask ❤</strong>.</p>
+            <p></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js %}
+<script>
+    $(document).ready(function(){
+        $('#live').attr('class', 'nav-item');
+        $('#data-review').attr('class', 'nav-item active');
+        document.querySelector("#counter").innerText = "2";
+    })
+    // Global parameters:
+    // do not resize the chart canvas when its container does (keep at 600x400px)
+    Chart.defaults.global.responsive = false;
+    // get chart canvas
+    var ctx = document.getElementById("myChart").getContext("2d");
+    // create the chart using the chart canvas
+    var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in labels %}
+                "{{item}}",
+                {% endfor %}],
+        datasets: [{
+            label: '{{ legend }}',
+            data: [{% for item in values %}
+            {{item}},
+            {% endfor %}],
+            backgroundColor: [
+                'rgba(5, 171, 154, 0.5)',
+                'rgba(255, 99, 132, 0.5)'
+            ],
+            borderColor: [
+                'rgba(5, 171, 154, 1)',
+                'rgba(255, 99, 132, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+    }
+    }
+});
+</script>
+{% endblock %}
