@@ -1,5 +1,6 @@
 import os
 import cv2
+from datetime import date, datetime
 from keras_preprocessing.image import img_to_array
 from flask import flash
 
@@ -59,3 +60,18 @@ def load_cascade_detector():
     face_detector = cv2.CascadeClassifier(cascade_path)
     print(cascade_path)
     return face_detector
+
+def check_count_image():
+    today = date.today()
+    pathDefault = "G:/skripsi/MaskDetector/app/static/gambar_wajah/"
+    checkFolderToday = os.path.isdir(pathDefault + str(today))
+    # print(checkFolderToday)
+    if checkFolderToday == True:
+        countWithMaskToday = len(os.listdir(pathDefault + str(today) + "/withMask"))
+        countNoMaskToday = len(os.listdir(pathDefault + str(today) + "/noMask"))
+    else:
+        countWithMaskToday = 0
+        countNoMaskToday = 0
+    # print(countWithMaskToday)
+    # print(countNoMaskToday)
+    return(countWithMaskToday, countNoMaskToday) 

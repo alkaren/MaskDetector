@@ -1,12 +1,5 @@
-# CV-Mask-detection
-Face Mask Detection web applicaion built with Flask, Keras-TensorFlow, OpenCV. 
-It can be used to detect face masks both in images and in real-time video.
-
-## Demo
-![Alt Text](https://github.com/GalileoParise/CV-Mask-detection/blob/master/mask_detection_live.gif)
-
-## Goal
-The goal is to create a masks detection system, able to recognize face masks both in images, both in real-time video, drawing bounding box around faces. In order to do so, I finetuned MobilenetV2 pretrained on Imagenet, in conjunction with the OpenCV face detection algorithm: that allows me to turn a classifier model into an object detection system.
+# MaskDetector
+The Minister of Health of the Republic of Indonesia establishes a health protocol for the public in public facilities with the aim of increasing efforts to prevent and control Covid-19 in order to prevent the occurrence of new epicenters or clusters. According to the Centers for Disease Control and Prevention (CDC) the impact of not wearing a mask in public places is being easy to catch the virus, spread the virus to other people, and carry the virus into the body. People also need to return to their activities by adapting to new habits such as always wearing masks in public places. By doing the classification, you can monitor the use of masks in the context of monitoring Covid-19. This classification process implements a convolutional neural network algorithm using mobilenetv2 in its modeling architecture. In this classification, there are several stages, namely doing the CRISP-DM (Cross Industry Standard for Data Mining) method first to process the data, the data used comes from the Kaggle and Github sites. Then make three scenarios for testing the dataset in order to get the highest results to be used as a model, then to calculate the results using the confusion matrix method for accuracy calculations, from the results of the dataset test using 4000 photos, the highest accuracy value is 98.75%.
 
 ## Technologies
 - Keras/Tensorflow
@@ -29,5 +22,9 @@ python wsgi.py
 and click on the link that the you will see on the prompt.
 
 ## Data
-The dataset used for training the model is available <a href="https://www.kaggle.com/omkargurav/face-mask-dataset">here</a>.
-
+The dataset used for training the model is available
+<ul>
+  <li><a href="https://www.kaggle.com/omkargurav/face-mask-dataset">Face Mask</a></li>
+  <li><a href="https://github.com/cabani/MaskedFace-Net">MaskedFace-Net</a></li>
+  <li><a href="https://github.com/X-zhangyang/Real-World-Masked-Face-Dataset">Real-World Masked Face Dataset，RMFD</a></li>
+</ul>

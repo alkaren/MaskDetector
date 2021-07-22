@@ -2,6 +2,7 @@ import sys
 from imutils import paths
 import os
 import numpy as np
+import seaborn as sns
 from tensorflow.keras import callbacks, Sequential
 import pandas as pd
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
@@ -16,14 +17,14 @@ from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.optimizers import Adam
 import matplotlib.pyplot as plt
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
 
 #sys.path.append("../")
 
 # PATH_TO_IMAGE = "../data/mask_dataset"
 # MODELS_PATH = "../models"
-PATH_TO_IMAGE = "G:/skripsi/CV-Mask-detection-master/data/mask_dataset2"#"../data/mask_dataset"
-MODELS_PATH = "G:/skripsi/CV-Mask-detection-master/models"
+PATH_TO_IMAGE = "G:/skripsi/MaskDetector/data/mask_dataset"#"../data/mask_dataset"
+MODELS_PATH = "G:/skripsi/MaskDetector/models"
 # initialize the initial learning rate, number of epochs to train for,
 # and batch size
 INIT_LR = 1e-4
@@ -34,13 +35,14 @@ BS = 32
 def collect_images_and_labels(path_to_images):
     # in seguito, usare https://keras.io/api/preprocessing/image/
     """
-        :param path_to_images should be the root folder, in which there is a folder for each label, and the folder's name is
-        the label itself
+        :param path_to_images harus root folder,
+        di mana ada folder untuk setiap label,
+        dan nama foldernya adalah label itu sendiri
         :return: a list with images and a list with labels
         """
     data = []
     labels = []
-    print(labels)
+    print(data,labels)
 
     for img_path in list(paths.list_images(path_to_images)):
         # extract the class label from the filename
@@ -100,7 +102,6 @@ def load_base_mobilenetv2():
         layer.trainable = False
 
     return model
-
 
 def plot_train_history(H):
     # plot the training loss and accuracy
@@ -175,6 +176,20 @@ def fine_tune_model():
     # label with corresponding largest predicted probability
     id_pred = np.argmax(id_pred, axis=1)
 
+    cmatrix = confusion_matrix(y_test.argmax(axis=1), id_pred)
+    tn, fp, fn, tp = confusion_matrix(y_test.argmax(axis=1), id_pred).ravel()
+    print(tn, fp, fn, tp)
+    fig, ax = plt.subplots(figsize=(8, 8))
+    sns.heatmap(cmatrix, cmap="Blues_r", annot=True, fmt='.4g', linewidths=2, linecolor='white', cbar=False, ax=ax)
+    # cmap options: rocket, mako, flare, crest, magma, viridis, rocket_r, cubehelix, seagreen, Blues, ...
+
+    ax.set_title('Confusion Matrix', fontsize=18, pad=24)
+    ax.set_xticklabels(labels=["without_mask", "with_mask"], fontsize=12)
+    ax.set_yticklabels(labels=["without_mask", "with_mask"], fontsize=12)
+
+    plt.xlabel("(y) Predict Label", fontsize=16, color="darkgreen", labelpad=24)
+    plt.ylabel("(y) Actual Label", fontsize=16, color="darkgreen", labelpad=24)
+    plt.show()
     # show a nicely formatted classification report
     print(classification_report(y_test.argmax(axis=1), id_pred,
                                 target_names=["without_mask", "with_mask"]))

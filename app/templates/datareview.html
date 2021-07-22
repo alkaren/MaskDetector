@@ -1,0 +1,188 @@
+{% extends "template.html" %}
+{% block content %}
+<div class="container pt-4">
+    <div class="container-fluid">
+        <div id="frame_container" class="row pd-3">
+            <div class="col-4">
+                <center>
+                    <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
+                    <canvas id="densityChart" width="400" height="400"></canvas>
+                </center>
+            </div>
+            <div class="col-8">
+                <center>
+                    <canvas id="myChart" width="400" height="400"></canvas>
+                </center>
+            </div>
+        </div>
+        <!-- <div class="row mt-3 mb-5">
+            <div class="col-6 d-flex justify-content-end">
+                <button id="start" onclick="start()" class="btn btn-outline-success"><i class="fa fa-video-camera"
+                                                                                        aria-hidden="true"></i> Start
+                </button>
+            </div>
+            <div class="col-6 d-flex justify-content-start">
+                <button id="stop" onclick="stop()" class="btn btn-danger active"><i class="fa fa-stop"
+                                                                                    aria-hidden="true"></i> Stop
+                </button>
+            </div>
+        </div> -->
+        <hr>
+        <div class="row mb-3">
+            <p class="d-flex mx-auto lead" style="color: #031b19;"><strong>please, stay safe and wear a mask ❤</strong>.</p>
+            <p></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block custom_js %}
+<script>
+    $(document).ready(function(){
+        $('#live').attr('class', 'nav-item');
+        $('#data-review').attr('class', 'nav-item active');
+    })
+    // Global parameters:
+    // do not resize the chart canvas when its container does (keep at 600x400px)
+    Chart.defaults.global.responsive = false;
+    // get chart canvas
+    // var ctx = document.getElementById("myChart").getContext("2d");
+    var densityCanvas = document.getElementById("densityChart");
+
+    var maskData = {
+    label: 'With Mask',
+    data: [{{ values }}],
+    backgroundColor: 'rgba(5, 171, 154, 0.5)',
+    borderColor: 'rgba(5, 171, 154, 1)',
+    borderWidth: 1
+    };
+
+    var noMaskData = {
+    label: 'No Mask',
+    data: [{{ valuesNoMask }}],
+    backgroundColor: 'rgba(255, 0, 77, 0.6)',
+    borderColor: 'rgba(255, 0, 77, 1)',
+    borderWidth: 1
+    };
+
+    var planetData = {
+    labels: ["Today"],
+    datasets: [maskData, noMaskData]
+    };
+
+    var chartOptions = {
+    scales: {
+        yAxes: [{
+        display: true,
+        scaleLabel: {
+            labelString: 'Today',
+            fontSize: 16 ,
+            display: true
+      },
+        ticks: {
+                beginAtZero: true
+            }
+        }]
+    },
+    legend: {
+            display: true
+         }
+    };
+
+    var barChart = new Chart(densityCanvas, {
+    type: 'bar',
+    data: planetData,
+    options: chartOptions
+    });
+
+
+var canvas = document.getElementById("myChart");
+var ctx = canvas.getContext('2d');
+
+// Global Options:
+Chart.defaults.global.defaultFontColor = 'black';
+Chart.defaults.global.defaultFontSize = 16;
+
+var data = {
+  labels: [{% for item in labels2 %}
+"{{item}}",
+{% endfor %}],
+  datasets: [{
+      label: "Mask",
+      fill: true,
+      lineTension: 0.1,
+      backgroundColor: "rgba(5, 171, 154, 0.5)",
+      borderColor: "rgba(5, 171, 154, 1)", // The main line color
+      borderCapStyle: 'square',
+      borderDash: [], // try [5, 15] for instance
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "rgba(5, 171, 154, 1)",
+      pointBackgroundColor: "rgba(5, 171, 154, 0.5)",
+      pointBorderWidth: 1,
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: "rgba(5, 171, 154, 0.5)",
+      pointHoverBorderColor: "rgba(5, 171, 154, 1)",
+      pointHoverBorderWidth: 1,
+      pointRadius: 4,
+      pointHitRadius: 10,
+      borderWidth: 1,
+      // notice the gap in the data and the spanGaps: true
+      data: [{% for item in values2 %}
+            {{item}},
+            {% endfor %}],
+      spanGaps: true,
+    }, {
+      label: "No Mask",
+      fill: true,
+      lineTension: 0.1,
+      backgroundColor: "rgba(255, 0, 77, 0.6)",
+      borderColor: "rgba(255, 0, 77, 1)",
+      borderCapStyle: 'butt',
+      borderDash: [],
+      borderDashOffset: 0.0,
+      borderJoinStyle: 'miter',
+      pointBorderColor: "rgba(255, 0, 77, 1)",
+      pointBackgroundColor: "rgba(255, 0, 77, 0.6)",
+      pointBorderWidth: 1,
+      pointHoverRadius: 8,
+      pointHoverBackgroundColor: "rgba(255, 0, 77, 0.6)",
+      pointHoverBorderColor: "rgba(255, 0, 77, 1)",
+      pointHoverBorderWidth: 1,
+      pointRadius: 4,
+      pointHitRadius: 10,
+      borderWidth: 1,
+      // notice the gap in the data and the spanGaps: false
+      data: [{% for item in values3 %}
+            {{item}},
+            {% endfor %}],
+      spanGaps: false,
+    }
+
+  ]
+};
+
+// Notice the scaleLabel at the same level as Ticks
+var options = {
+  scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                },
+                scaleLabel: {
+                     display: true,
+                     labelString: 'All Day',
+                     fontSize: 16 
+                  }
+            }]            
+        }  
+};
+
+// Chart declaration:
+var myBarChart = new Chart(ctx, {
+  type: 'line',
+  data: data,
+  options: options
+});
+
+</script>
+{% endblock %}

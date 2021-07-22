@@ -33,17 +33,17 @@ def home_page():
     # print(gg)
     return render_template("home_page.html")
 
-@main_bp.route("/test")
+@main_bp.route("/datareview")
 def chart():
     # Get today's date
   today = date.today()
   print("Today is: ", today)
     
   # Yesterday date
-  yesterday = today - timedelta(days = 1)
-  print("Yesterday was: ", yesterday)
+  # yesterday = today - timedelta(days = 1)
+  # print("Yesterday was: ", yesterday)
 
-  pathDefault = "G:/skripsi/CV-Mask-detection-master/app/static/gambar_wajah/"
+  pathDefault = "G:/skripsi/MaskDetector/app/static/gambar_wajah/"
 
   checkFolderToday = os.path.isdir(pathDefault + str(today))
   print(checkFolderToday)
@@ -56,40 +56,31 @@ def chart():
   print(countWithMaskToday)
   print(countNoMaskToday)
 
-  checkFolderYesterday = os.path.isdir(pathDefault + str(yesterday))
-  print(checkFolderYesterday)
-  if checkFolderYesterday == True:
-    countWithMaskYesterday = len(os.listdir(pathDefault + str(yesterday) + "/withMask"))
-    countNoMaskYesterday = len(os.listdir(pathDefault + str(yesterday) + "/noMask"))
-  else:
-    countWithMaskYesterday = 0
-    countNoMaskYesterday = 0
-  print(countWithMaskYesterday)
-  print(countNoMaskYesterday)
-
   my_list = os.listdir(pathDefault)
   countListDir = len(my_list)
   print(my_list)
   print(countListDir)
-  countWithMaskAll = 0
-  countNoMaskAll = 0
+  countWithMaskAll = []
+  countNoMaskAll = []
   if countListDir > 0:
     for FolderX in my_list:
-      countWithMaskAll = countWithMaskAll + len(os.listdir(pathDefault + str(FolderX) + "/withMask"))
-      countNoMaskAll = countNoMaskAll + len(os.listdir(pathDefault + str(FolderX) + "/noMask"))
+      countWithMaskAll.append(int(len(os.listdir(pathDefault + str(FolderX) + "/withMask"))))
+      countNoMaskAll.append(int(len(os.listdir(pathDefault + str(FolderX) + "/noMask"))))
   else:
-    countWithMaskAll = 0
-    countNoMaskAll = 0
+    countWithMaskAll = []
+    countNoMaskAll = []
   
   print(countWithMaskAll)
   print(countNoMaskAll)
-  legend = 'Wearing Mask Data'
+  legend = 'All Day'
   labels = ["With Mask", "No Mask"]
+  labels2 = my_list
 
-  values = [countWithMaskToday, countNoMaskToday]
-  values2 = [countWithMaskYesterday, countNoMaskYesterday]
-  values3 = [countWithMaskAll, countNoMaskAll]
-  return render_template('test.html', values=values, values2=values2, values3=values3, labels=labels, legend=legend)
+  values = countWithMaskToday
+  valuesNoMask = countNoMaskToday
+  values2 = countWithMaskAll
+  values3 = countNoMaskAll  
+  return render_template('datareview.html', values=values, valuesNoMask=valuesNoMask, values2=values2, values3=values3, labels=labels, labels2=labels2, legend=legend)
 
 def gen(camera):
 
@@ -99,7 +90,6 @@ def gen(camera):
         frame_processed = cv2.imencode('.jpg', frame_processed)[1].tobytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_processed + b'\r\n')
-
 
 
 @main_bp.route('/video_feed')

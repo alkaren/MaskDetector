@@ -107,7 +107,7 @@ class BaseCamera(object):
 
 
 class Camera(BaseCamera):
-    video_source = 0#'http://192.168.1.7:8080/video'
+    video_source = 1
 
     def __init__(self):
         # if os.environ.get('OPENCV_CAMERA_SOURCE'):
@@ -120,9 +120,12 @@ class Camera(BaseCamera):
 
     @staticmethod
     def frames():
-        camera = cv2.VideoCapture(Camera.video_source)
+        camera = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+        # camera = cv2.VideoCapture(1, cv2.CAP_DSHOW)
         if not camera.isOpened():
-            raise RuntimeError('Could not start camera.')
+            camera = cv2.VideoCapture(1, cv2.CAP_DSHOW)
+            if not camera.isOpened():
+                raise RuntimeError('Could not start camera.')
 
         while True:
             # read current frame
